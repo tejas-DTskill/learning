@@ -11,7 +11,7 @@ pipeline {
             agent { label 'demo' } // Ensure this stage runs on the demo node
             steps {
                 // Pull the code from the GitHub repository
-                git 'https://github.com/tejas-DTskill/gene_agent_service.git'
+                git 'https://github.com/tejas-DTskill/learning.git'
             }
         }
         stage('Build Docker Image') {
