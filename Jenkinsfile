@@ -2,7 +2,7 @@ pipeline {
     agent none // No global agent, we will specify it in the stages
 
     environment {
-        DOCKER_IMAGE = "gene-agent-service" // Name of the Docker image
+        DOCKER_IMAGE = "learning" // Name of the Docker image
         VERSION = "v${BUILD_NUMBER}" // Version based on Jenkins build number
     }
 
@@ -28,9 +28,15 @@ pipeline {
             steps {
                 // Stop and remove any existing container with the same name
                 script {
-                    sh 'docker ps -q --filter "name=gene-agent-service" | xargs -r docker stop | xargs -r docker rm'
+                    sh """
+                    container_id=\$(docker ps -q --filter "learning")
+                    if [ -n "\$container_id" ]; then
+                        docker stop \$container_id
+                        docker rm \$container_id
+                    fi
                     // Run the new container from the newly created Docker image
-                    sh "docker run -d -p 8000:8000 --name gene-agent-service-${VERSION} ${DOCKER_IMAGE}:${VERSION}"
+                    docker run -d -p 8000:8000 --name learning-${VERSION} ${DOCKER_IMAGE}:${VERSION}
+                    """
                 }
             }
         }
